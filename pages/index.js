@@ -48,7 +48,7 @@ export default function Home() {
       <div className="absolute left-4 top-4 bottom-4 w-[90%] md:w-1/3 lg:w-1/4 z-10 flex flex-col">
         <div className="h-full flex flex-col bg-white/60 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl overflow-hidden">
           <div className="p-6 border-b border-white/20">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Find your nearest <span className="text-[#F8BC06] font-bold text-3xl">Moneywave</span></h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-0">Find your nearest <span className="text-[#F8BC06] font-bold text-3xl">Moneywave</span></h1>
           </div>
 
           <Search onSearch={setSearchQuery} />
