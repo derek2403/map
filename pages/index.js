@@ -60,6 +60,16 @@ export default function Home() {
                 >
                   <h3 className="font-semibold text-gray-800">{location.name}</h3>
                   <p className="text-sm text-gray-500 mt-1 truncate">{location.address}</p>
+
+                  <div className="flex items-center mt-1 text-sm text-green-600 font-medium">
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    {location.openingHours && (location.openingHours.includes('-')
+                      ? `Open until ${location.openingHours.split(' - ')[1]}`
+                      : location.openingHours)}
+                  </div>
+
                   <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-black bg-[#F8BC06] rounded-full">
                     {location.type}
                   </span>
