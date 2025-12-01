@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
       <Head>
-        <title>Klang Valley Locations</title>
+        <title>Moneywave Locations</title>
         <meta name="description" content="Find locations in Klang Valley" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -43,7 +43,7 @@ export default function Home() {
       <div className="w-full md:w-1/3 lg:w-1/4 flex flex-col bg-white border-r border-gray-200 z-10 shadow-lg">
         <div className="p-6 border-b border-gray-100">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Find Locations</h1>
-          <p className="text-sm text-gray-500">Explore top spots in Klang Valley</p>
+          <p className="text-sm text-gray-500">Find your nearest Moneywave</p>
         </div>
 
         <Search onSearch={setSearchQuery} />
