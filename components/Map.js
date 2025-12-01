@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect } from 'react';
@@ -22,12 +22,13 @@ const ChangeView = ({ center, zoom }) => {
 
 const Map = ({ locations, center, zoom }) => {
     return (
-        <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} className="h-full w-full z-0">
+        <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} className="h-full w-full z-0" zoomControl={false}>
             <ChangeView center={center} zoom={zoom} />
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            <ZoomControl position="bottomright" />
             {locations.map((location) => (
                 <Marker key={location.id} position={[location.lat, location.lng]} icon={customIcon}>
                     <Popup>
