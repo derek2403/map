@@ -42,8 +42,7 @@ export default function Home() {
       {/* Sidebar */}
       <div className="w-full md:w-1/3 lg:w-1/4 flex flex-col bg-white border-r border-gray-200 z-10 shadow-lg">
         <div className="p-6 border-b border-gray-100">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Find Locations</h1>
-          <p className="text-sm text-gray-500">Find your nearest Moneywave</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Find your nearest Moneywave</h1>
         </div>
 
         <Search onSearch={setSearchQuery} />
