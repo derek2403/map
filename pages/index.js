@@ -1,78 +1,83 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import Head from 'next/head';
+import dynamic from 'next/dynamic';
+import { useState, useMemo } from 'react';
+import { locations } from '../data/locations';
+import Search from '../components/Search';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Dynamically import Map component to avoid SSR issues with Leaflet
+const Map = dynamic(() => import('../components/Map'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full w-full flex items-center justify-center bg-gray-100 text-gray-500">
+      Loading Map...
+    </div>
+  ),
 });
 
 export default function Home() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const filteredLocations = useMemo(() => {
+    return locations.filter((location) =>
+      location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      location.address.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
+  const mapCenter = selectedLocation
+    ? [selectedLocation.lat, selectedLocation.lng]
+    : [3.1390, 101.6869]; // Default center (KL)
+
+  const mapZoom = selectedLocation ? 15 : 11;
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black`}
-    >
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the index.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+      <Head>
+        <title>Klang Valley Locations</title>
+        <meta name="description" content="Find locations in Klang Valley" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      {/* Sidebar */}
+      <div className="w-full md:w-1/3 lg:w-1/4 flex flex-col bg-white border-r border-gray-200 z-10 shadow-lg">
+        <div className="p-6 border-b border-gray-100">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Find Locations</h1>
+          <p className="text-sm text-gray-500">Explore top spots in Klang Valley</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs/pages/getting-started?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <Search onSearch={setSearchQuery} />
+
+        <div className="flex-1 overflow-y-auto">
+          {filteredLocations.length > 0 ? (
+            <ul className="divide-y divide-gray-100">
+              {filteredLocations.map((location) => (
+                <li
+                  key={location.id}
+                  onClick={() => setSelectedLocation(location)}
+                  className={`p-4 cursor-pointer hover:bg-[#F8BC06]/10 transition-colors duration-150 ${selectedLocation?.id === location.id ? 'bg-[#F8BC06]/10 border-l-4 border-[#F8BC06]' : ''
+                    }`}
+                >
+                  <h3 className="font-semibold text-gray-800">{location.name}</h3>
+                  <p className="text-sm text-gray-500 mt-1 truncate">{location.address}</p>
+                  <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-black bg-[#F8BC06] rounded-full">
+                    {location.type}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="p-8 text-center text-gray-500">
+              No locations found matching "{searchQuery}"
+            </div>
+          )}
         </div>
-      </main>
+      </div>
+
+      {/* Map Area */}
+      <div className="hidden md:block md:w-2/3 lg:w-3/4 relative">
+        <Map locations={filteredLocations} center={mapCenter} zoom={mapZoom} />
+      </div>
     </div>
   );
 }
