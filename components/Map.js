@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useEffect } from 'react';
@@ -12,9 +12,18 @@ const customIcon = L.divIcon({
     popupAnchor: [0, -36]
 });
 
+const ChangeView = ({ center, zoom }) => {
+    const map = useMap();
+    useEffect(() => {
+        map.flyTo(center, zoom);
+    }, [center, zoom, map]);
+    return null;
+};
+
 const Map = ({ locations, center, zoom }) => {
     return (
         <MapContainer center={center} zoom={zoom} scrollWheelZoom={true} className="h-full w-full z-0">
+            <ChangeView center={center} zoom={zoom} />
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
